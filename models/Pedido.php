@@ -37,4 +37,14 @@ class Pedido {
 
     // Obtener todos los pedidos (para panel administrativo)
     public function obtenerTodosLosPedidos() {
-        $stmt = $this->pdo->query("SELECT p.pedido_id, u.nombre AS cliente, pr.nombre
+        $stmt = $this->pdo->query("SELECT p.pedido_id, u.nombre AS cliente, pr.nombre AS producto, p.cantidad, p.fecha, mp.metodo, e.nombre AS empleado, p.observaciones
+                                   FROM pedido p
+                                   JOIN usuarios_clientes u ON p.cliente_id = u.cliente_id
+                                   JOIN productos pr ON p.producto_id = pr.codigo
+                                   JOIN metodo_pago mp ON p.metodo_pago_id = mp.id
+                                   JOIN empleado e ON p.empleado_id = e.empleado_id
+                                   ORDER BY p.fecha DESC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
+?>

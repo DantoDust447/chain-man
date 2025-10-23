@@ -12,4 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     header('Location: ../views/carrito.php');
 }
+if ($_POST['accion'] === 'eliminar') {
+    $id = $_POST['id'];
+    $stmt = $pdo->prepare("DELETE FROM carrito WHERE id = ?");
+    $stmt->execute([$id]);
+    header('Location: ../views/carrito.php');
+}
+
 ?>

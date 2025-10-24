@@ -1,18 +1,16 @@
 <?php
 require_once '../config/db.php';
-require_once '../models/Producto.php';
+require_once '../models/Categoria.php';
 
-$categoria_id = isset($_GET['categoria_id']) ? intval($_GET['categoria_id']) : null;
-
-$productoModel = new Producto($pdo);
-$productos = $categoria_id ? $productoModel->obtenerPorCategoria($categoria_id) : $productoModel->obtenerTodos();
+$categoriaModel = new Categoria($pdo);
+$categorias = $categoriaModel->obtenerTodas();
 ?>
 
 <!DOCTYPE html>
 <html lang="es" data-bs-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <title>Productos</title>
+  <title>Categorías</title>
   <link rel="stylesheet" href="../public/assets/style.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -56,26 +54,18 @@ $productos = $categoria_id ? $productoModel->obtenerPorCategoria($categoria_id) 
     </div>
   </header>
 <body>
-  
-  <h2 class="mb-4">🧪 Productos <?= $categoria_id ? 'de la categoría seleccionada' : 'disponibles' ?></h2>
+  <h2 class="mb-4">📂 Categorías de Suplementos</h2>
 
-  <?php if (empty($productos)): ?>
-    <div class="alert alert-warning">No hay productos disponibles en esta categoría.</div>
+  <?php if (empty($categorias)): ?>
+    <div class="alert alert-warning">No hay categorías registradas.</div>
   <?php else: ?>
     <div class="row">
-      <?php foreach ($productos as $prod): ?>
+      <?php foreach ($categorias as $cat): ?>
         <div class="col-md-4 mb-4">
           <div class="card h-100 shadow-sm">
-            <img src="<?= htmlspecialchars($prod['imagen_producto'] ?? '../public/assets/imgs/default.png') ?>" class="card-img-top" alt="Imagen del producto">
             <div class="card-body">
-              <h5 class="card-title"><?= htmlspecialchars($prod['nombre']) ?></h5>
-              <p class="card-text">💲 <?= number_format($prod['precio'], 2) ?> GTQ</p>
-              <p class="card-text">🧬 <?= htmlspecialchars($prod['descripcion']) ?></p>
-              <form method="POST" action="../controllers/AgregarAlCarrito.php">
-                <input type="hidden" name="producto_id" value="<?= $prod['producto_id'] ?>">
-                <input type="number" name="cantidad" value="1" min="1" class="form-control mb-2">
-                <button type="submit" class="btn btn-success w-100">🛒 Agregar al carrito</button>
-              </form>
+              <h5 class="card-title"><?= htmlspecialchars($cat['categoria']) ?></h5>
+              <a href="productos.php?categoria_id=<?= $cat['categoria_id'] ?>" class="btn btn-primary">🔍 Ver productos</a>
             </div>
           </div>
         </div>

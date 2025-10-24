@@ -30,10 +30,10 @@ $cliente_id = $_SESSION['cliente_id'] ?? null;
       </a>
       <span class="navbar-brand mb-0 h1 text-light me-4">Prime Supplements</span>
       <div class="link-container" id="main-nav-links">
-        <a href="views/categorias.php" class="header-links">Categorías</a>
-        <a href="views/marcas.php" class="header-links">Marcas</a>
-        <a href="views/productos.php" class="header-links">Productos</a>
-        <a href="views/nosotros.php" class="header-links">Nosotros</a>
+        <a href="../views/categorias.php" class="header-links">Categorías</a>
+        <a href="../views/marcas.php" class="header-links">Marcas</a>
+        <a href="../views/productos.php" class="header-links">Productos</a>
+        <a href="../views/nosotros.php" class="header-links">Nosotros</a>
       </div>
 
       <form class="search-bar" id="search-form">

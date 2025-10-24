@@ -19,10 +19,10 @@ $stmt->execute([$cliente_id]);
 $carrito = $stmt->fetchAll();
 
 // Obtener métodos de pago
-$metodos = $pdo->query("SELECT id, metodo FROM metodo_pago")->fetchAll();
+$metodos = $pdo->query("SELECT metodo_pago_id, metodo FROM metodo_pago")->fetchAll();
 
 // Obtener empleados (puedes filtrar por rol si lo deseas)
-$empleados = $pdo->query("SELECT empleado_id, nombre FROM empleado")->fetchAll();
+$empleados = $pdo->query("SELECT dpi_empleado, nombre FROM empleado")->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -73,7 +73,7 @@ $empleados = $pdo->query("SELECT empleado_id, nombre FROM empleado")->fetchAll()
         <label for="metodo_pago_id" class="form-label">Método de pago</label>
         <select name="metodo_pago_id" id="metodo_pago_id" class="form-select" required>
           <?php foreach ($metodos as $metodo): ?>
-            <option value="<?= $metodo['id'] ?>"><?= $metodo['metodo'] ?></option>
+            <option value="<?= $metodo['metodo_pago_id'] ?>"><?= $metodo['metodo'] ?></option>
           <?php endforeach; ?>
         </select>
       </div>
@@ -82,7 +82,7 @@ $empleados = $pdo->query("SELECT empleado_id, nombre FROM empleado")->fetchAll()
         <label for="empleado_id" class="form-label">Empleado que toma el pedido</label>
         <select name="empleado_id" id="empleado_id" class="form-select" required>
           <?php foreach ($empleados as $empleado): ?>
-            <option value="<?= $empleado['empleado_id'] ?>"><?= $empleado['nombre'] ?></option>
+            <option value="<?= $empleado['dpi_empleado'] ?>"><?= $empleado['nombre'] ?></option>
           <?php endforeach; ?>
         </select>
       </div>

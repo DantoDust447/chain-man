@@ -13,7 +13,7 @@ $cliente_id = $_SESSION['cliente_id'];
 // Obtener productos del carrito
 $stmt = $pdo->prepare("SELECT c.id, p.nombre, p.precio, c.cantidad
                        FROM carrito c
-                       JOIN productos p ON c.producto_id = p.codigo
+                       JOIN productos p ON c.producto_id = p.producto_id
                        WHERE c.cliente_id = ?");
 $stmt->execute([$cliente_id]);
 $carrito = $stmt->fetchAll();

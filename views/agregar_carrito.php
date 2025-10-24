@@ -16,10 +16,10 @@ if ($producto_id && $cantidad > 0) {
                            VALUES (?, ?, ?, NOW())");
     $stmt->execute([$cliente_id, $producto_id, $cantidad]);
 
-    header('Location: ../index.php?agregado=1');
+    header('Location: ../public/index.php?agregado=1');
     exit;
 } else {
-    header('Location: ../index.php?error=1');
+    header('Location: ../public/index.php?error=1');
     exit;
 }
 ?>

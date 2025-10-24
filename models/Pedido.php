@@ -9,41 +9,36 @@ class Pedido {
     }
 
     // Registrar un pedido
-    public function registrarPedido($cliente_id, $producto_id, $cantidad, $metodo_pago_id, $empleado_id, $observaciones) {
-        $stmt = $this->pdo->prepare("INSERT INTO pedido (cliente_id, producto_id, cantidad, fecha, metodo_pago_id, empleado_id, observaciones)
-                                     VALUES (?, ?, ?, NOW(), ?, ?, ?)");
+    public function registrarPedido($cliente_id, $dni_empleado, $direccion_entrega, $telefono, $estado_id, $total_pedido, $observaciones) {
+        $stmt = $this->pdo->prepare("INSERT INTO pedido (cliente_id, dni_empleado, direccion_entrega, telefono, estado_id, total_pedido, observaciones)
+                                     VALUES (?, ?, ?, ?, ?, ?, ?)");
         return $stmt->execute([
             $cliente_id,
-            $producto_id,
-            $cantidad,
-            $metodo_pago_id,
-            $empleado_id,
+            $dni_empleado,
+            $direccion_entrega,
+            $telefono,
+            $estado_id,
+            $total_pedido,
             $observaciones
         ]);
     }
 
     // Obtener todos los pedidos de un cliente
     public function obtenerPedidosPorCliente($cliente_id) {
-        $stmt = $this->pdo->prepare("SELECT p.pedido_id, pr.nombre AS producto, p.cantidad, p.fecha, mp.metodo, e.nombre AS empleado, p.observaciones
-                                     FROM pedido p
-                                     JOIN productos pr ON p.producto_id = pr.codigo
-                                     JOIN metodo_pago mp ON p.metodo_pago_id = mp.id
-                                     JOIN empleado e ON p.empleado_id = e.empleado_id
-                                     WHERE p.cliente_id = ?
-                                     ORDER BY p.fecha DESC");
+        $stmt = $this->pdo->prepare("SELECT pedido_id, direccion_entrega, telefono, estado_id, total_pedido, observaciones
+                                     FROM pedido
+                                     WHERE cliente_id = ?
+                                     ORDER BY pedido_id DESC");
         $stmt->execute([$cliente_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Obtener todos los pedidos (para panel administrativo)
     public function obtenerTodosLosPedidos() {
-        $stmt = $this->pdo->query("SELECT p.pedido_id, u.nombre AS cliente, pr.nombre AS producto, p.cantidad, p.fecha, mp.metodo, e.nombre AS empleado, p.observaciones
+        $stmt = $this->pdo->query("SELECT p.pedido_id, c.nombre AS cliente, p.direccion_entrega, p.telefono, p.estado_id, p.total_pedido, p.observaciones
                                    FROM pedido p
-                                   JOIN usuarios_clientes u ON p.cliente_id = u.cliente_id
-                                   JOIN productos pr ON p.producto_id = pr.codigo
-                                   JOIN metodo_pago mp ON p.metodo_pago_id = mp.id
-                                   JOIN empleado e ON p.empleado_id = e.empleado_id
-                                   ORDER BY p.fecha DESC");
+                                   JOIN clientes c ON p.cliente_id = c.cliente_id
+                                   ORDER BY p.pedido_id DESC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

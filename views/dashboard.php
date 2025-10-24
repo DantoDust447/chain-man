@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../config/db.php';
-require_once '../models/Usuario.php';
+require_once '../models/Cliente.php';
 require_once '../models/Pedido.php';
 
 if (!isset($_SESSION['cliente_id'])) {
@@ -10,10 +10,10 @@ if (!isset($_SESSION['cliente_id'])) {
 }
 
 $cliente_id = $_SESSION['cliente_id'];
-$usuarioModel = new Usuario($pdo);
+$clienteModel = new Cliente($pdo);
 $pedidoModel = new Pedido($pdo);
 
-$usuario = $usuarioModel->obtenerPorId($cliente_id);
+$cliente = $clienteModel->obtenerPorId($cliente_id);
 $pedidos = $pedidoModel->obtenerPedidosPorCliente($cliente_id);
 ?>
 
@@ -26,16 +26,16 @@ $pedidos = $pedidoModel->obtenerPedidosPorCliente($cliente_id);
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="container py-5">
-  <h2 class="mb-4">👤 Bienvenido, <?= $usuario['nombre'] ?></h2>
+  <h2 class="mb-4">👤 Bienvenido, <?= htmlspecialchars($cliente['nombre']) ?></h2>
 
   <div class="row">
     <div class="col-md-4">
       <div class="card mb-4">
         <div class="card-header bg-dark text-white">📋 Mi Perfil</div>
         <div class="card-body">
-          <p><strong>Nombre:</strong> <?= $usuario['nombre'] . ' ' . $usuario['apellido_p'] . ' ' . $usuario['apellido_m'] ?></p>
-          <p><strong>Correo:</strong> <?= $usuario['correo'] ?></p>
-          <p><strong>Teléfono:</strong> <?= $usuario['telefono'] ?></p>
+          <p><strong>Nombre:</strong> <?= htmlspecialchars($cliente['nombre'] . ' ' . $cliente['apellido']) ?></p>
+          <p><strong>Correo:</strong> <?= htmlspecialchars($cliente['email']) ?></p>
+          <p><strong>Fecha de nacimiento:</strong> <?= $cliente['fecha_nac'] ? htmlspecialchars($cliente['fecha_nac']) : 'No registrada' ?></p>
           <a href="editar_perfil.php" class="btn btn-outline-primary btn-sm">✏️ Editar perfil</a>
         </div>
       </div>
@@ -51,7 +51,7 @@ $pedidos = $pedidoModel->obtenerPedidosPorCliente($cliente_id);
       <div class="card">
         <div class="card-header bg-dark text-white">📦 Historial de Pedidos</div>
         <div class="card-body">
-          <?php if (count($pedidos) === 0): ?>
+          <?php if (empty($pedidos)): ?>
             <div class="alert alert-info">Aún no has realizado ningún pedido.</div>
           <?php else: ?>
             <table class="table table-bordered">
@@ -68,12 +68,12 @@ $pedidos = $pedidoModel->obtenerPedidosPorCliente($cliente_id);
               <tbody>
                 <?php foreach ($pedidos as $pedido): ?>
                   <tr>
-                    <td><?= $pedido['producto'] ?></td>
-                    <td><?= $pedido['cantidad'] ?></td>
-                    <td><?= $pedido['fecha'] ?></td>
-                    <td><?= $pedido['metodo'] ?></td>
-                    <td><?= $pedido['empleado'] ?></td>
-                    <td><?= $pedido['observaciones'] ?></td>
+                    <td><?= htmlspecialchars($pedido['producto']) ?></td>
+                    <td><?= htmlspecialchars($pedido['cantidad']) ?></td>
+                    <td><?= htmlspecialchars($pedido['fecha']) ?></td>
+                    <td><?= htmlspecialchars($pedido['metodo']) ?></td>
+                    <td><?= htmlspecialchars($pedido['empleado']) ?></td>
+                    <td><?= htmlspecialchars($pedido['observaciones']) ?></td>
                   </tr>
                 <?php endforeach; ?>
               </tbody>

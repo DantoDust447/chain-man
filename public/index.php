@@ -1,3 +1,15 @@
+<?php
+session_start();
+require_once '../config/db.php';
+
+// Obtener productos desde la base de datos
+$stmt = $pdo->query("SELECT producto_id, nombre, descripcion, precio, cantidad_peso, imagen_producto FROM productos");
+$productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Verificar si el usuario está logueado
+$cliente_id = $_SESSION['cliente_id'] ?? null;
+?>
+
 <!DOCTYPE html>
 <html lang="es" data-bs-theme="dark">
 <head>
@@ -12,7 +24,7 @@
 <body>
   <header>
     <nav>
-      <a href="index.html">
+      <a href="index.php">
         <img src="assets/imgs/logo.png" alt="Logo de la empresa" class="logo">
       </a>
       <span class="navbar-brand mb-0 h1 text-light me-4">Prime Supplements</span>
@@ -77,7 +89,33 @@
     <h2 class="text-center my-4">🔥 Nuestros Productos Destacados 🔥</h2>
 
     <div class="row row-cols-1 row-cols-md-3 g-4" id="products-container">
-      <!-- Aquí puedes insertar productos destacados dinámicamente con JS o PHP -->
+      <?php foreach ($productos as $producto): ?>
+        <div class="col">
+          <div class="card h-100">
+            <img src="<?= htmlspecialchars($producto['imagen_producto']) ?>" class="card-img-top" alt="<?= htmlspecialchars($producto['nombre']) ?>">
+            <div class="card-body">
+              <h5 class="card-title"><?= htmlspecialchars($producto['nombre']) ?></h5>
+              <p class="card-text"><?= htmlspecialchars($producto['descripcion']) ?></p>
+              <p><strong>Precio:</strong> Q<?= number_format($producto['precio'], 2) ?></p>
+              <p><strong>Contenido:</strong> <?= htmlspecialchars($producto['cantidad_peso']) ?></p>
+
+              <?php if ($cliente_id): ?>
+                <form action="../views/agregar_carrito.php" method="POST" class="d-grid gap-2">
+                  <input type="hidden" name="producto_id" value="<?= $producto['producto_id'] ?>">
+                  <input type="number" name="cantidad" value="1" min="1" class="form-control mb-2" required>
+                  <button type="submit" class="btn btn-outline-success btn-sm">
+                    🛒 Agregar al carrito
+                  </button>
+                </form>
+              <?php else: ?>
+                <a href="../views/login.php" class="btn btn-outline-warning btn-sm">🔐 Inicia sesión para comprar</a>
+              <?php endif; ?>
+
+              <a href="../views/detalle_producto.php?id=<?= $producto['producto_id'] ?>" class="btn btn-outline-light btn-sm mt-2">🔍 Ver más</a>
+            </div>
+          </div>
+        </div>
+      <?php endforeach; ?>
     </div>
   </main>
 
